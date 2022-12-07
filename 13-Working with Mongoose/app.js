@@ -4,35 +4,53 @@ dotenv.config()
 import express from 'express';
 import bodyParser from "body-parser";
 
+import { mongoose } from "mongoose"
 import { get404 } from './controllers/error.js';
-import { mongoConnect } from './util/database.js';
-import { User } from './models/user.js';
+import User from './models/user.js';
 
 const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-import adminRoutes from './routes/admin.js';
-import shopRoutes from './routes/shop.js';
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'))
 
 app.use((req, res, next) => {
-  User.findById('638f7d95f29dd7c464ce6790')
+  User.findById('63906183ae6f9b1e3662a206')
     .then(user => {
-      req.user = new User(user.name, user.email, user.cart, user._id)
+      req.user = user
       next();
     })
     .catch(err => console.log(err));
 });
 
+import adminRoutes from './routes/admin.js';
+import shopRoutes from './routes/shop.js';
+
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
-app.use(get404);
+app.use(get404)
 
-mongoConnect(() => {
-  app.listen(process.env.PORT)
-})
+mongoose.connect(process.env.MONGO_URI)
+  .then(result => {
+    User.findOne().then(user => {
+      if (!user) {
+        const user = new User({
+          name: "Ahmed",
+          email: 'ahmed@ahmed.com',
+          cart: {
+            items: []
+          }
+        })
+        user.save()
+      }
+    })
+
+    app.listen(process.env.PORT)
+    console.log(`Server Started & Listening To Port ${process.env.PORT}`)
+    console.log('Connected To Db')
+  }).catch(err => {
+    console.log(err)
+  })
