@@ -1,0 +1,31 @@
+{
+  "name": "nodejs-complete-guide",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Complete Node.js Guide",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -L",
+    "start-server": "node app.js"
+  },
+  "author": "Maximilian Schwarzmüller",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "dotenv": "^16.0.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "mongoose": "^6.8.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "got@<11.8.5": ">=11.8.5",
+      "glob-parent@<5.1.2": ">=5.1.2",
+      "ejs@<3.1.7": ">=3.1.7"
+    }
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
