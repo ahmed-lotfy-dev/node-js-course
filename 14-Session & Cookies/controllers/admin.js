@@ -5,7 +5,8 @@ export function getAddProduct(req, res, next) {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     path: '/admin/add-product',
-    editing: false
+    editing: false,
+    isAuthenticated: req.session.isLoggedIn
   });
 }
 
@@ -48,7 +49,8 @@ export function getEditProduct(req, res, next) {
         pageTitle: 'Edit Product',
         path: '/admin/edit-product',
         editing: editMode,
-        product: product
+        product: product,
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
@@ -79,13 +81,14 @@ export function postEditProduct(req, res, next) {
 
 export function getProducts(req, res, next) {
   Product.find()
-  .select('title price -_id')
-  .populate('userId', "name")
+    .select('title price -_id')
+    .populate('userId', "name")
     .then(products => {
       res.render('admin/products', {
         prods: products,
         pageTitle: 'Admin Products',
-        path: '/admin/products'
+        path: '/admin/products',
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));

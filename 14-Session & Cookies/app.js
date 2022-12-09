@@ -2,9 +2,10 @@ import dotenv from 'dotenv';
 dotenv.config()
 
 import express from 'express';
-import bodyParser from "body-parser";
-
 import { mongoose } from "mongoose"
+import session from "express-session"
+import connectMongo from "connect-mongodb-session"
+
 import { get404 } from './controllers/error.js';
 import User from './models/user.js';
 
@@ -13,21 +14,30 @@ import shopRoutes from './routes/shop.js';
 import authRoutes from './routes/auth.js'
 
 const app = express();
+const MongoStore = connectMongo(session)
+const store = new MongoStore({
+  uri: process.env.MONGO_URI_SESSION,
+  collection: 'sessions'
+})
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
+app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET, resave: false, saveUninitialized: false, store: store }))
 
 app.use((req, res, next) => {
-  User.findById('63906183ae6f9b1e3662a206')
+  if(!req.session.user) {
+    return next()
+  }
+  User.findById(req.session.user._id)
     .then(user => {
       req.user = user
-      next();
+      next()
     })
     .catch(err => console.log(err));
-});
+})
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
@@ -50,7 +60,7 @@ mongoose.connect(process.env.MONGO_URI)
     })
 
     app.listen(process.env.PORT)
-    console.log(`Server Started & Listening To Port ${process.env.PORT}`)
+    console.log(`Server Started & Listening To Port http://localhost:${process.env.PORT}`)
     console.log('Connected To Db')
   }).catch(err => {
     console.log(err)
