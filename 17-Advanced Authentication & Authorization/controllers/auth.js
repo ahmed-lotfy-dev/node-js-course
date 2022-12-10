@@ -8,6 +8,7 @@ import sendgridTransport from 'nodemailer-sendgrid-transport'
 const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
+      // DELETED DON'T BOTHER TRY TO USE IT
       api_key: "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"
     }
   })

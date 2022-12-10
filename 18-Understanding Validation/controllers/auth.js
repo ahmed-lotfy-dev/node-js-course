@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs"
 import User from "../models/user.js";
 import nodemailer from 'nodemailer'
 
+
 import sendgridTransport from 'nodemailer-sendgrid-transport'
 
 const transporter = nodemailer.createTransport(
