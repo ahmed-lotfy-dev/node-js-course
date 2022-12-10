@@ -1,0 +1,53 @@
+{
+  "name": "nodejs-complete-guide",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Complete Node.js Guide",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -L",
+    "start-server": "node app.js"
+  },
+  "author": "Maximilian Schwarzmüller",
+  "license": "ISC",
+  "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "connect-flash": "^0.1.1",
+    "connect-mongodb-session": "^3.1.1",
+    "csurf": "^1.11.0",
+    "dotenv": "^16.0.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.17.3",
+    "express-validator": "^6.14.2",
+    "mongoose": "^6.8.0",
+    "nodemailer": "^6.8.0",
+    "nodemailer-sendgrid-transport": "^0.2.0",
+    "sib-api-v3-sdk": "^8.4.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "got@<11.8.5": ">=11.8.5",
+      "glob-parent@<5.1.2": ">=5.1.2",
+      "ejs@<3.1.7": ">=3.1.7",
+      "minimist@<1.2.6": ">=1.2.6",
+      "lodash@<4.17.12": ">=4.17.12",
+      "lodash@<4.17.11": ">=4.17.11",
+      "lodash@<4.17.20": ">=4.17.20",
+      "minimist@>=1.0.0 <1.2.3": ">=1.2.3",
+      "nth-check@<2.0.1": ">=2.0.1",
+      "marked@>=0.3.14 <0.6.2": ">=0.6.2",
+      "lodash@<4.17.5": ">=4.17.5",
+      "jsdom@<=16.4.0": ">=16.5.0",
+      "lodash@<4.17.21": ">=4.17.21",
+      "marked@<4.0.10": ">=4.0.10"
+    }
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
