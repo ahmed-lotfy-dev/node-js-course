@@ -93,8 +93,11 @@ export function postLogin(req, res, next) {
           res.redirect('/login');
         });
     })
-    .catch(err => console.log(err));
-};
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });};
 
 export function postLogout(req, res, next) {
   req.session.destroy((err) => {
@@ -186,7 +189,11 @@ export function postReset(req, res, next) {
           `
         });
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+      });
   })
 }
 
@@ -208,7 +215,11 @@ export function getNewPassword(req, res, next) {
         userId: user._id.toString()
       })
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 }
 
 export function postNewPassword(req, res, next) {
@@ -227,5 +238,9 @@ export function postNewPassword(req, res, next) {
     .then(result => {
       res.redirect('/login')
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 }
