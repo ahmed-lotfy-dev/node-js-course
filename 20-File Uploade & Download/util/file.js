@@ -1,14 +1,11 @@
-import fs from 'fs';
+import { unlink } from 'fs';
 
-const deleteFile = filePath => {
-  try {
-    fs.unlink(filePath, null);
-  } catch {
-    const error = new Error("Deleting the file failed.");
-    error.httpStatusCode = 500;
-    throw Error(error);
-  }
-};
+const deleteFile = (filePath) => {
+  unlink(filePath, (err) => {
+    if (err) {
+      throw (err);
+    }
+  });
+}
 
-export default deleteFile
-
+export default deleteFile 

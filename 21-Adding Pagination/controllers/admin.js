@@ -1,12 +1,12 @@
-import Product from '../models/product.js';
-// import mongoose from 'mongoose';
-import fileHelper from '../util/file.js'
+const mongoose = require('mongoose');
 
-import * as validator from 'express-validator'
+const fileHelper = require('../util/file');
 
-const { validationResult } = validator
+const { validationResult } = require('express-validator/check');
 
-export function getAddProduct(req, res, next) {
+const Product = require('../models/product');
+
+exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     path: '/admin/add-product',
@@ -17,7 +17,7 @@ export function getAddProduct(req, res, next) {
   });
 };
 
-export function postAddProduct(req, res, next) {
+exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
   const image = req.file;
   const price = req.body.price;
@@ -95,7 +95,7 @@ export function postAddProduct(req, res, next) {
     });
 };
 
-export function getEditProduct(req, res, next) {
+exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
   if (!editMode) {
     return res.redirect('/');
@@ -123,7 +123,7 @@ export function getEditProduct(req, res, next) {
     });
 };
 
-export function postEditProduct(req, res, next) {
+exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId;
   const updatedTitle = req.body.title;
   const updatedPrice = req.body.price;
@@ -173,8 +173,7 @@ export function postEditProduct(req, res, next) {
     });
 };
 
-
-export function getProducts(req, res, next) {
+exports.getProducts = (req, res, next) => {
   Product.find({ userId: req.user._id })
     // .select('title price -_id')
     // .populate('userId', 'name')
@@ -193,8 +192,7 @@ export function getProducts(req, res, next) {
     });
 };
 
-
-export const postDeleteProduct = async (req, res, next) => {
+exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findById(prodId)
     .then(product => {
