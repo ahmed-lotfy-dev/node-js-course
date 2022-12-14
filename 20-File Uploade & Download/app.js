@@ -4,20 +4,16 @@ dotenv.config()
 import express from 'express';
 import { mongoose } from "mongoose"
 import session from "express-session"
-import connectMongo from "connect-mongodb-session"
+import MongoDBStore from "connect-mongodb-session"
 import csrf from "csurf"
 import flash from "connect-flash"
-
+import multer from "multer"
 
 import { get404, get500 } from './controllers/error.js';
 import User from './models/user.js';
 
-import adminRoutes from './routes/admin.js';
-import shopRoutes from './routes/shop.js';
-import authRoutes from './routes/auth.js'
-
 const app = express();
-const MongoStore = connectMongo(session)
+const MongoStore = MongoDBStore(session)
 const store = new MongoStore({
   uri: process.env.MONGO_URI_SESSION,
   collection: 'sessions'
@@ -25,12 +21,48 @@ const store = new MongoStore({
 
 const csrfProtection = csrf()
 
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+
+    cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+import adminRoutes from './routes/admin.js';
+import shopRoutes from './routes/shop.js';
+import authRoutes from './routes/auth.js'
+
 app.use(express.urlencoded({ extended: true }))
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+);
 app.use(express.static('public'))
-app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET, resave: false, saveUninitialized: false, store: store }))
+app.use('/images',express.static('images'))
+app.use(session({
+  secret: process.env.EXPRESS_SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: store
+})
+)
 
 app.use(csrfProtection)
 app.use(flash())
@@ -42,27 +74,22 @@ app.use((req, res, next) => {
 })
 
 app.use((req, res, next) => {
+  // throw new Error('Sync Dummy');
   if (!req.session.user) {
-    return next()
+    return next();
   }
   User.findById(req.session.user._id)
     .then(user => {
       if (!user) {
-        return next()
+        return next();
       }
-      req.user = user
-      next()
+      req.user = user;
+      next();
     })
     .catch(err => {
-      next(new Error(err))
+      next(new Error(err));
     });
-})
-
-app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken()
-  next()
-})
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);

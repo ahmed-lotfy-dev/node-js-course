@@ -24,13 +24,13 @@ router.get('/add-product', isAuth, getAddProduct);
 router.get('/products', isAuth, getProducts);
 
 // // /admin/add-product => POST
-router.post('/add-product',
+router.post(
+  '/add-product',
   [
     body('title')
       .isString()
       .isLength({ min: 3 })
       .trim(),
-    body('imageUrl').isURL(),
     body('price').isFloat(),
     body('description')
       .isLength({ min: 5, max: 400 })
@@ -49,7 +49,6 @@ router.post(
       .isString()
       .isLength({ min: 3 })
       .trim(),
-    body('imageUrl').isURL(),
     body('price').isFloat(),
     body('description')
       .isLength({ min: 5, max: 400 })
