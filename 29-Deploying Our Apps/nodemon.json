@@ -1,0 +1,7 @@
+{
+  "env": {
+    "MONGO_URI": "mongodb+srv://node-db:pw5eOcatahXqEyTk@messages.quv8u2u.mongodb.net/books-shop",
+    "STRIPE_KEY": "sk_test_51M6HbbLo9COH9EB5VQbkkiShGzVvQl8OzZ4B6Mca9liaz1HuhoCmmf3SHmXs5hUtKlqXyvS1cYTx3LaCLvnq1jqJ00WZykg3bA",
+    "PORT": "8080"
+  }
+}
